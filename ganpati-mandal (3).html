@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandal Khata</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Yatra+One&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#FBF3E4;
+  --panel:#FFFDF8;
+  --panel-2:#FFF8EC;
+  --ink:#2B2118;
+  --ink-soft:#7A6A57;
+  --vermillion:#C6432B;
+  --vermillion-dark:#9E3220;
+  --marigold:#E8A33D;
+  --brass:#A8763E;
+  --deep-green:#1F3D2B;
+  --deep-green-2:#2C5540;
+  --line:#E4D6BE;
+  --paid:#3F7D53;
+  --unpaid:#C6432B;
+  --radius:3px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{
+  font-family:'Yatra One',cursive;
+  font-weight:400;
+  color:var(--deep-green);
+  letter-spacing:.2px;
+}
+::selection{background:var(--marigold);color:var(--ink);}
+a{color:var(--vermillion);}
+button{font-family:inherit;}
+
+/* ---------- App shell ---------- */
+#app{display:flex;min-height:100vh;}
+
+/* Sidebar */
+.sidebar{
+  width:250px;
+  flex-shrink:0;
+  background:var(--deep-green);
+  color:#EFE6D3;
+  display:flex;
+  flex-direction:column;
+  padding:0 0 20px;
+}
+.sidebar-top{
+  padding:26px 22px 18px;
+  border-bottom:1px solid rgba(239,230,211,.15);
+}
+.arch-motif{width:100%;height:34px;margin-bottom:14px;}
+.mandal-name{
+  font-family:'Yatra One',cursive;
+  font-size:26px;
+  color:#F6E9C9;
+  line-height:1.15;
+  cursor:pointer;
+}
+.mandal-tagline{
+  font-size:12.5px;
+  color:#B9CBB9;
+  margin-top:6px;
+  cursor:pointer;
+}
+.mandal-tagline:hover,.mandal-name:hover{color:var(--marigold);}
+.nav{list-style:none;margin:0;padding:14px 12px;flex:1;}
+.nav li{margin-bottom:2px;}
+.nav button{
+  width:100%;
+  text-align:left;
+  background:none;
+  border:none;
+  color:#DCE6DC;
+  padding:11px 14px;
+  border-radius:var(--radius);
+  font-size:14.5px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:background .15s;
+}
+.nav button svg{width:17px;height:17px;flex-shrink:0;opacity:.85;}
+.nav button:hover{background:rgba(255,255,255,.06);}
+.nav button.active{background:var(--vermillion);color:#fff;}
+.nav button.active svg{opacity:1;}
+.sidebar-foot{padding:14px 22px 0;font-size:11.5px;color:#8FA890;border-top:1px solid rgba(239,230,211,.12);padding-top:14px;}
+
+/* Main */
+.main{flex:1;min-width:0;padding:34px 42px 60px;max-width:1180px;}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px;flex-wrap:wrap;gap:14px;}
+.page-head h1{font-size:30px;margin:0 0 4px;}
+.page-sub{color:var(--ink-soft);font-size:13.5px;margin:0;}
+.head-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+.year-select{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:8px 10px;
+  border-radius:var(--radius);
+  font-size:13.5px;
+  color:var(--ink);
+}
+
+.btn{
+  border:1px solid var(--vermillion);
+  background:var(--vermillion);
+  color:#fff;
+  padding:9px 16px;
+  border-radius:var(--radius);
+  font-size:13.5px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s,transform .1s;
+}
+.btn:hover{background:var(--vermillion-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:transparent;color:var(--deep-green);border-color:var(--line);}
+.btn.secondary:hover{background:var(--panel-2);border-color:var(--brass);}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--ink-soft);padding:6px 8px;}
+.btn.ghost:hover{color:var(--vermillion);}
+.btn.small{padding:5px 10px;font-size:12.5px;}
+
+/* Panels */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  margin-bottom:22px;
+}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.panel-head h2{font-size:19px;margin:0;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;}
+.stat{background:var(--panel);padding:20px 20px 18px;}
+.stat .label{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+.stat .value{font-family:'Yatra One',cursive;font-size:27px;color:var(--deep-green);}
+.stat .value.red{color:var(--vermillion);}
+.stat .sub{font-size:11.5px;color:var(--ink-soft);margin-top:4px;}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13.8px;}
+th{
+  text-align:left;
+  font-weight:600;
+  color:var(--ink-soft);
+  font-size:12px;
+  padding:8px 10px;
+  border-bottom:1px solid var(--line);
+}
+td{padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--panel-2);}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
+.center{text-align:center;}
+.empty-row td{color:var(--ink-soft);text-align:center;padding:26px;font-style:italic;}
+
+.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.tag.paid{background:#E4F1E6;color:var(--paid);}
+.tag.unpaid{background:#F7E4DE;color:var(--unpaid);}
+.tag.pending{background:#FDF0DA;color:#A06A17;}
+.tag.done{background:#E4F1E6;color:var(--paid);}
+.tag.inprogress{background:#FDF0DA;color:#A06A17;}
+.tag.main-member{background:#E4E9F1;color:#2E4C7A;}
+.tag.temp-member{background:#F1E9DC;color:var(--brass);}
+
+.filter-tabs{display:flex;gap:6px;margin-bottom:16px;}
+.filter-tabs button{
+  background:var(--panel-2);border:1px solid var(--line);color:var(--ink-soft);
+  padding:6px 13px;border-radius:20px;font-size:12.5px;cursor:pointer;
+}
+.filter-tabs button.active{background:var(--deep-green);border-color:var(--deep-green);color:#fff;}
+.hint{font-size:11.5px;color:var(--ink-soft);margin-top:-8px;margin-bottom:16px;}
+
+.global-year-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:10px 16px;margin-bottom:24px;
+}
+.global-year-bar .gyb-label{font-size:12.5px;font-weight:600;color:var(--brass);}
+
+.month-dot{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:50%;
+  font-size:10.5px;font-weight:700;
+  cursor:pointer;border:1px solid var(--line);
+  color:var(--ink-soft);background:var(--panel-2);
+}
+.month-dot.paid{background:var(--paid);border-color:var(--paid);color:#fff;}
+.month-dot.paid:hover{opacity:.85;}
+.month-dot:hover{border-color:var(--brass);}
+.month-row{display:flex;gap:5px;flex-wrap:nowrap;}
+
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--ink-soft);padding:4px;display:inline-flex;}
+.icon-btn:hover{color:var(--vermillion);}
+.icon-btn svg{width:15px;height:15px;}
+
+.empty-state{padding:40px 20px;text-align:center;color:var(--ink-soft);}
+.empty-state .display{font-size:20px;color:var(--brass);margin-bottom:6px;}
+
+/* Forms / Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(31,25,17,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--panel);border-radius:var(--radius);max-width:460px;width:100%;max-height:88vh;overflow-y:auto;border:1px solid var(--line);}
+.modal-head{padding:20px 24px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.modal-head h3{margin:0;font-size:19px;}
+.modal-body{padding:20px 24px;}
+.modal-foot{padding:16px 24px 22px;display:flex;gap:10px;justify-content:flex-end;}
+.field{margin-bottom:15px;}
+.field label{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;font-weight:600;}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:var(--radius);
+  font-family:inherit;font-size:13.8px;background:#fff;color:var(--ink);
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--marigold);outline-offset:0;border-color:var(--marigold);}
+.field-row{display:flex;gap:12px;}
+.field-row .field{flex:1;}
+.close-x{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:20px;line-height:1;padding:2px 6px;}
+.close-x:hover{color:var(--vermillion);}
+
+/* Receipt */
+.receipt{
+  border:2px solid var(--brass);
+  padding:28px 30px;
+  background:#fffdf7;
+  font-family:'Inter',sans-serif;
+}
+.receipt-head{text-align:center;border-bottom:2px dashed var(--brass);padding-bottom:14px;margin-bottom:16px;}
+.receipt-head .display{font-size:24px;color:var(--vermillion);}
+.receipt-head .sub{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+.receipt-no{font-size:12px;color:var(--ink-soft);text-align:right;margin-bottom:6px;}
+.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dotted var(--line);font-size:13.8px;}
+.receipt-row span:first-child{color:var(--ink-soft);}
+.receipt-amount{margin-top:16px;padding:12px 14px;background:var(--panel-2);border-radius:var(--radius);}
+.receipt-amount .big{font-family:'Yatra One',cursive;font-size:24px;color:var(--deep-green);}
+.receipt-words{font-size:12px;color:var(--ink-soft);margin-top:4px;font-style:italic;}
+.receipt-sign{display:flex;justify-content:space-between;margin-top:36px;font-size:12.5px;color:var(--ink-soft);}
+.receipt-sign div{text-align:center;width:150px;border-top:1px solid var(--line);padding-top:6px;}
+
+/* Mobile top tabs */
+.mobile-tabs{display:none;}
+
+@media print{
+  body *{visibility:hidden;}
+  #print-area,#print-area *{visibility:visible;}
+  #print-area{position:absolute;top:0;left:0;width:100%;padding:20px;}
+  .modal-foot{display:none;}
+}
+
+@media (max-width:880px){
+  .sidebar{display:none;}
+  .main{padding:20px 16px 70px;max-width:100%;}
+  .mobile-tabs{
+    display:flex;gap:6px;overflow-x:auto;padding:14px 16px 10px;background:var(--deep-green);
+    position:sticky;top:0;z-index:20;
+  }
+  .mobile-tabs button{
+    flex-shrink:0;background:rgba(255,255,255,.08);border:none;color:#EFE6D3;
+    padding:8px 13px;border-radius:20px;font-size:12.5px;cursor:pointer;
+  }
+  .mobile-tabs button.active{background:var(--vermillion);color:#fff;}
+  .mobile-head{padding:16px 16px 0;background:var(--deep-green);}
+  .mobile-head .mandal-name{font-size:21px;padding-bottom:12px;}
+  #app{display:block;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .field-row{flex-direction:column;gap:0;}
+  table{font-size:12.5px;}
+  th,td{padding:8px 6px;}
+}
+
+.loading-wrap{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:12px;color:var(--ink-soft);}
+.spinner{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--vermillion);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.shared-note{font-size:11.5px;color:var(--ink-soft);background:var(--panel-2);border:1px solid var(--line);padding:8px 12px;border-radius:var(--radius);margin-bottom:20px;}
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading-wrap">
+  <div class="spinner"></div>
+  <div>Opening the mandal khata…</div>
+</div>
+
+<div id="app" style="display:none;">
+
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <svg class="arch-motif" viewBox="0 0 220 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 30 Q2 6 30 6 Q58 6 58 30" stroke="#E8A33D" stroke-width="1.4"/>
+        <path d="M64 30 Q64 6 92 6 Q120 6 120 30" stroke="#E8A33D" stroke-width="1.4"/>
+        <path d="M126 30 Q126 6 154 6 Q182 6 182 30" stroke="#E8A33D" stroke-width="1.4"/>
+        <circle cx="30" cy="6" r="2.4" fill="#E8A33D"/>
+        <circle cx="92" cy="6" r="2.4" fill="#E8A33D"/>
+        <circle cx="154" cy="6" r="2.4" fill="#E8A33D"/>
+      </svg>
+      <div class="mandal-name" id="mandalNameEl" title="Click to edit">Shree Ganesh Mitra Mandal</div>
+      <div class="mandal-tagline" id="mandalTaglineEl" title="Click to edit">Estd. 2015 · Surat</div>
+    </div>
+    <ul class="nav" id="navList">
+      <!-- filled by JS -->
+    </ul>
+    <div class="sidebar-foot">Ganpati Bappa Morya 🙏</div>
+  </div>
+
+  <div style="flex:1;min-width:0;">
+    <div class="mobile-head">
+      <div class="mandal-name" id="mandalNameElM" title="Click to edit">Shree Ganesh Mitra Mandal</div>
+    </div>
+    <div class="mobile-tabs" id="mobileTabs"></div>
+
+    <div class="main" id="mainContent-wrap">
+      <div id="globalYearBar"></div>
+      <div id="mainContent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ============================= DATA LAYER ============================= */
+const KEYS = ['sponsors','members','payments','expenses','budget','tasks','meta'];
+let DB = { sponsors:[], members:[], payments:[], expenses:[], budget:[], tasks:[],
+  meta:{ mandalName:'Shree Ganesh Mitra Mandal', tagline:'Estd. 2015 · Surat', nextReceiptNo:1, extraYears:[] } };
+
+async function loadAll(){
+  for(const k of KEYS){
+    try{
+      const res = await window.storage.get(k, true);
+      if(res && res.value!==undefined){
+        DB[k] = JSON.parse(res.value);
+      }
+    }catch(e){ /* key doesn't exist yet, keep default */ }
+  }
+  if(!Array.isArray(DB.meta.extraYears)) DB.meta.extraYears = [];
+}
+async function save(key){
+  try{
+    await window.storage.set(key, JSON.stringify(DB[key]), true);
+  }catch(e){
+    console.error('Storage error for', key, e);
+    alert('Could not save — please check your connection and try again.');
+  }
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function currentYear(){ return new Date().getFullYear(); }
+function fmt(n){ n=Number(n)||0; return '₹' + n.toLocaleString('en-IN'); }
+function fmtDate(d){ if(!d) return '—'; const dt=new Date(d); if(isNaN(dt)) return d; return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function numToWords(num){
+  num = Math.round(Number(num)||0);
+  if(num===0) return 'Zero';
+  const a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  function two(n){ if(n<20) return a[n]; return b[Math.floor(n/10)] + (n%10? ' '+a[n%10]:''); }
+  function three(n){ if(n>99) return a[Math.floor(n/100)]+' Hundred'+(n%100?' '+two(n%100):''); return two(n); }
+  let str='', crore=Math.floor(num/10000000); num%=10000000;
+  let lakh=Math.floor(num/100000); num%=100000;
+  let thousand=Math.floor(num/1000); num%=1000;
+  let rest=num;
+  if(crore) str+=three(crore)+' Crore ';
+  if(lakh) str+=three(lakh)+' Lakh ';
+  if(thousand) str+=three(thousand)+' Thousand ';
+  if(rest) str+=three(rest);
+  return str.trim();
+}
+
+/* ============================= NAV / STATE ============================= */
+const TABS = [
+  { id:'dashboard', label:'Dashboard', icon:iconHome },
+  { id:'sponsors', label:'Sponsors', icon:iconGift },
+  { id:'members', label:'Members & payments', icon:iconUsers },
+  { id:'payments', label:'Payment log', icon:iconReceipt },
+  { id:'expenses', label:'Expenses', icon:iconCoin },
+  { id:'budget', label:'Budget', icon:iconChart },
+  { id:'tasks', label:'Tasks', icon:iconCheck },
+];
+let activeTab = 'dashboard';
+let selectedYear = currentYear();
+let memberFilter = 'All';
+
+function matchesYear(y){
+  return selectedYear==='all' || Number(y)===Number(selectedYear);
+}
+
+function iconHome(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11l9-7 9 7"/><path d="M5 10v9h14v-9"/></svg>`;}
+function iconGift(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 12h18M12 8v13"/><path d="M12 8c-2 0-4-1.2-4-3.2A2 2 0 0110 3c1.8 0 2 2.5 2 5zM12 8c2 0 4-1.2 4-3.2A2 2 0 0014 3c-1.8 0-2 2.5-2 5z"/></svg>`;}
+function iconUsers(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M16 14.2c2.7.4 4.5 2.5 4.5 5.8"/></svg>`;}
+function iconReceipt(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"/><path d="M9 8h6M9 12h6"/></svg>`;}
+function iconCoin(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 15.5c.5 1 1.4 1.5 2.6 1.5 1.6 0 2.7-.9 2.7-2.1 0-3-5.6-1.5-5.6-4.5 0-1.2 1.1-2.1 2.7-2.1 1.2 0 2.1.5 2.6 1.5M12 6v1.3M12 16.7V18"/></svg>`;}
+function iconChart(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M2 20h20"/></svg>`;}
+function iconCheck(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12l3 3 5-6"/></svg>`;}
+function iconTrash(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>`;}
+function iconPrint(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-5a1 1 0 011-1h16a1 1 0 011 1v5a1 1 0 01-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg>`;}
+
+function renderNav(){
+  document.getElementById('navList').innerHTML = TABS.map(t=>`
+    <li><button class="${activeTab===t.id?'active':''}" onclick="setTab('${t.id}')">${t.icon()}<span>${t.label}</span></button></li>
+  `).join('');
+  document.getElementById('mobileTabs').innerHTML = TABS.map(t=>`
+    <button class="${activeTab===t.id?'active':''}" onclick="setTab('${t.id}')">${t.label}</button>
+  `).join('');
+}
+function setTab(id){ activeTab=id; renderNav(); renderMain(); window.scrollTo(0,0); }
+
+function allYears(){
+  const s = new Set([currentYear()]);
+  DB.payments.forEach(p=>s.add(Number(p.year)));
+  DB.expenses.forEach(e=>s.add(Number(e.year)));
+  DB.budget.forEach(b=>s.add(Number(b.year)));
+  DB.tasks.forEach(t=>s.add(Number(t.year)));
+  (DB.meta.extraYears||[]).forEach(y=>s.add(Number(y)));
+  return Array.from(s).sort((a,b)=>b-a);
+}
+function yearSelectHTML(){
+  const years = allYears();
+  return `<span style="display:inline-flex;gap:6px;align-items:center;">
+    <select class="year-select" onchange="selectedYear=this.value==='all'?'all':Number(this.value);renderMain();">
+      <option value="all" ${selectedYear==='all'?'selected':''}>All years</option>
+      ${years.map(y=>`<option value="${y}" ${y===selectedYear?'selected':''}>${y}</option>`).join('')}
+    </select>
+    <button class="btn secondary small" onclick="openAddYearForm()" title="Plan ahead for a future year">+ Plan a year</button>
+  </span>`;
+}
+function openAddYearForm(){
+  const suggestion = Math.max(...allYears()) + 1;
+  openModal('Plan a future year', `
+    <div class="field"><label>Year</label><input id="f_year" type="number" value="${suggestion}"></div>
+    <p class="hint" style="margin-top:0;">This just adds the year to your list so you can set up budget, tasks and members ahead of the festival — you don't need any payments or expenses yet to start planning.</p>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveAddYear()">Add year</button>`);
+}
+async function saveAddYear(){
+  const year = Number(document.getElementById('f_year').value);
+  if(!year){ alert('Please enter a valid year.'); return; }
+  if(!DB.meta.extraYears.includes(year)) DB.meta.extraYears.push(year);
+  await save('meta');
+  selectedYear = year;
+  closeModal();
+  renderMain();
+}
+
+/* ============================= MODAL HELPERS ============================= */
+function openModal(title, bodyHTML, footHTML){
+  document.getElementById('modalBox').innerHTML = `
+    <div class="modal-head"><h3>${title}</h3><button class="close-x" onclick="closeModal()">&times;</button></div>
+    <div class="modal-body">${bodyHTML}</div>
+    <div class="modal-foot">${footHTML}</div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target.id==='modalOverlay') closeModal(); });
+
+function memberOptions(selected){
+  return DB.members.map(m=>`<option value="${m.id}" ${m.id===selected?'selected':''}>${escapeHtml(m.name)}</option>`).join('');
+}
+function escapeHtml(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ============================= DASHBOARD ============================= */
+function renderDashboard(){
+  const y = selectedYear;
+  const yLabel = y==='all' ? 'all years' : y;
+  const yearPayments = DB.payments.filter(p=>matchesYear(p.year));
+  const yearExpenses = DB.expenses.filter(e=>matchesYear(e.year));
+  const yearSponsors = DB.sponsors.filter(s=> y==='all' || !s.date || new Date(s.date).getFullYear()===Number(y));
+  const collection = yearPayments.reduce((a,p)=>a+Number(p.amount||0),0);
+  const sponsorTotal = yearSponsors.reduce((a,s)=>a+Number(s.amount||0),0);
+  const expenseTotal = yearExpenses.reduce((a,e)=>a+Number(e.amount||0),0);
+  const balance = collection + sponsorTotal - expenseTotal;
+  const pendingMembers = DB.members.filter(m=>{
+    if(m.memberType==='Temporary' && y==='all') return false;
+    const paidMonths = new Set(yearPayments.filter(p=>p.memberId===m.id && p.period!=='Yearly').map(p=>p.period));
+    const yearlyPaid = yearPayments.some(p=>p.memberId===m.id && p.period==='Yearly');
+    return !yearlyPaid && paidMonths.size < 12;
+  }).length;
+  const activeTasks = DB.tasks.filter(t=>matchesYear(t.year) && t.status!=='Done').length;
+
+  const recent = [
+    ...yearPayments.map(p=>({date:p.date, text:`${memberName(p.memberId)} paid ${fmt(p.amount)} (${p.period})`, type:'in'})),
+    ...yearExpenses.map(e=>({date:e.date, text:`${escapeHtml(e.description)} — ${fmt(e.amount)}`, type:'out'})),
+  ].sort((a,b)=> new Date(b.date)-new Date(a.date)).slice(0,8);
+
+  return `
+    <div class="page-head">
+      <div><h1>Mandal dashboard</h1><p class="page-sub">A quick look at ${yLabel}'s collections, expenses and pending work.</p></div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="label">Sponsorship (${yLabel})</div><div class="value">${fmt(sponsorTotal)}</div><div class="sub">${yearSponsors.length} sponsor${yearSponsors.length!==1?'s':''}</div></div>
+      <div class="stat"><div class="label">Member collection (${yLabel})</div><div class="value">${fmt(collection)}</div><div class="sub">${yearPayments.length} payment${yearPayments.length!==1?'s':''}</div></div>
+      <div class="stat"><div class="label">Expenses (${yLabel})</div><div class="value red">${fmt(expenseTotal)}</div><div class="sub">${yearExpenses.length} entries</div></div>
+      <div class="stat"><div class="label">Balance in hand</div><div class="value" style="color:${balance>=0?'var(--deep-green)':'var(--vermillion)'}">${fmt(balance)}</div><div class="sub">Sponsorship + collection − expenses</div></div>
+      <div class="stat"><div class="label">Members pending</div><div class="value ${pendingMembers?'red':''}">${pendingMembers}</div><div class="sub">of ${DB.members.length} total members</div></div>
+      <div class="stat"><div class="label">Open tasks</div><div class="value">${activeTasks}</div><div class="sub">not yet marked done</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Recent activity</h2></div>
+      ${recent.length ? `
+        <table><tbody>
+          ${recent.map(r=>`<tr><td style="width:110px;color:var(--ink-soft);">${fmtDate(r.date)}</td><td>${r.text}</td><td class="num" style="color:${r.type==='in'?'var(--paid)':'var(--vermillion)'}">${r.type==='in'?'+':'−'}</td></tr>`).join('')}
+        </tbody></table>
+      ` : `<div class="empty-state"><div class="display">Nothing recorded yet</div>Add a sponsor, member payment or expense to see it here.</div>`}
+    </div>
+  `;
+}
+function memberName(id){ const m=DB.members.find(x=>x.id===id); return m? m.name : 'Unknown member'; }
+
+/* ============================= SPONSORS ============================= */
+function renderSponsors(){
+  const y = selectedYear;
+  const list = DB.sponsors.filter(s=> y==='all' || !s.date || new Date(s.date).getFullYear()===Number(y));
+  const total = list.reduce((a,s)=>a+Number(s.amount||0),0);
+  return `
+    <div class="page-head">
+      <div><h1>Sponsors</h1><p class="page-sub">Everyone who has supported the mandal financially.</p></div>
+      <div class="head-actions"><button class="btn" onclick="openSponsorForm()">Add sponsor</button></div>
+    </div>
+    <div class="stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
+      <div class="stat"><div class="label">Sponsors ${y==='all'?'(all years)':'in '+y}</div><div class="value">${list.length}</div></div>
+      <div class="stat"><div class="label">Total sponsorship</div><div class="value">${fmt(total)}</div></div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Name</th><th>Phone</th><th>Date</th><th>Note</th><th class="num">Amount</th><th></th></tr></thead>
+        <tbody>
+          ${list.length===0? `<tr class="empty-row"><td colspan="6">No sponsors for this period yet. Click "Add sponsor" to start the list.</td></tr>` :
+          list.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).map(s=>`
+            <tr>
+              <td>${escapeHtml(s.name)}</td>
+              <td>${escapeHtml(s.phone||'—')}</td>
+              <td>${fmtDate(s.date)}</td>
+              <td>${escapeHtml(s.note||'—')}</td>
+              <td class="num">${fmt(s.amount)}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('sponsors','${s.id}')">${iconTrash()}</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function openSponsorForm(){
+  openModal('Add sponsor', `
+    <div class="field"><label>Sponsor name</label><input id="f_name" placeholder="e.g. Patel Traders"></div>
+    <div class="field-row">
+      <div class="field"><label>Amount (₹)</label><input id="f_amount" type="number" min="0"></div>
+      <div class="field"><label>Date</label><input id="f_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+    </div>
+    <div class="field"><label>Phone (optional)</label><input id="f_phone"></div>
+    <div class="field"><label>Note (optional)</label><input id="f_note" placeholder="e.g. Mandap sponsor"></div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveSponsor()">Save sponsor</button>`);
+}
+async function saveSponsor(){
+  const name=document.getElementById('f_name').value.trim();
+  const amount=document.getElementById('f_amount').value;
+  if(!name || !amount){ alert('Please enter the sponsor name and amount.'); return; }
+  DB.sponsors.push({ id:uid(), name, amount:Number(amount), date:document.getElementById('f_date').value, phone:document.getElementById('f_phone').value.trim(), note:document.getElementById('f_note').value.trim() });
+  await save('sponsors'); closeModal(); renderMain();
+}
+
+/* ============================= MEMBERS & PAYMENT GRID ============================= */
+function renderMembers(){
+  const y = selectedYear;
+  const filtered = DB.members.filter(m=> memberFilter==='All' || m.memberType===memberFilter);
+
+  if(y==='all'){
+    // Lifetime view — monthly grid doesn't apply across years, so show lifetime totals instead.
+    return `
+    <div class="page-head">
+      <div><h1>Members & payments</h1><p class="page-sub">Lifetime totals across every year. Pick a single year to see the monthly grid.</p></div>
+      <div class="head-actions"><button class="btn secondary" onclick="openMemberForm()">Add member</button><button class="btn" onclick="openPaymentForm()">Record payment</button></div>
+    </div>
+    ${memberTypeTabs()}
+    <div class="panel" style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Member</th><th>Type</th><th>Member since</th><th class="num">Total paid (all years)</th><th></th></tr></thead>
+        <tbody>
+          ${filtered.length===0? `<tr class="empty-row"><td colspan="5">No members in this list yet.</td></tr>` :
+          filtered.map(m=>{
+            const total = DB.payments.filter(p=>p.memberId===m.id).reduce((a,p)=>a+Number(p.amount||0),0);
+            return `<tr>
+              <td>${escapeHtml(m.name)}</td>
+              <td><span class="tag ${m.memberType==='Temporary'?'temp-member':'main-member'}">${m.memberType||'Main'}</span></td>
+              <td>${m.joinYear||'—'}</td>
+              <td class="num">${fmt(total)}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('members','${m.id}')">${iconTrash()}</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  return `
+    <div class="page-head">
+      <div><h1>Members & payments</h1><p class="page-sub">Tap a month to record that member's payment for ${y}.</p></div>
+      <div class="head-actions"><button class="btn secondary" onclick="openMemberForm()">Add member</button><button class="btn" onclick="openPaymentForm()">Record payment</button></div>
+    </div>
+    ${memberTypeTabs()}
+    <div class="panel" style="overflow-x:auto;">
+      <table>
+        <thead><tr>
+          <th>Member</th>
+          <th>Type</th>
+          <th style="min-width:330px;">Monthly status (${y})</th>
+          <th>Yearly fee</th>
+          <th class="num">Total paid</th>
+          <th></th>
+        </tr></thead>
+        <tbody>
+          ${filtered.length===0? `<tr class="empty-row"><td colspan="6">No members in this list yet. Click "Add member" to start your roster.</td></tr>` :
+          filtered.map(m=>{
+            const mPayments = DB.payments.filter(p=>p.memberId===m.id && Number(p.year)===Number(y));
+            const paidMonths = new Set(mPayments.filter(p=>p.period!=='Yearly').map(p=>p.period));
+            const yearlyPay = mPayments.find(p=>p.period==='Yearly');
+            const total = mPayments.reduce((a,p)=>a+Number(p.amount||0),0);
+            return `<tr>
+              <td>${escapeHtml(m.name)}</td>
+              <td><span class="tag ${m.memberType==='Temporary'?'temp-member':'main-member'}">${m.memberType||'Main'}</span></td>
+              <td><div class="month-row">${MONTHS.map(mo=>`<span class="month-dot ${paidMonths.has(mo)?'paid':''}" title="${mo}${paidMonths.has(mo)?' — paid':' — click to record'}" onclick="quickAddPayment('${m.id}','${mo}')">${mo[0]}</span>`).join('')}</div></td>
+              <td>${yearlyPay? `<span class="tag paid">${fmt(yearlyPay.amount)}</span>` : `<span class="tag unpaid" style="cursor:pointer;" onclick="quickAddPayment('${m.id}','Yearly')">Not paid</span>`}</td>
+              <td class="num">${fmt(total)}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('members','${m.id}')">${iconTrash()}</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function memberTypeTabs(){
+  const counts = { All: DB.members.length, Main: DB.members.filter(m=>(m.memberType||'Main')==='Main').length, Temporary: DB.members.filter(m=>m.memberType==='Temporary').length };
+  return `<div class="filter-tabs">
+    ${['All','Main','Temporary'].map(t=>`<button class="${memberFilter===t?'active':''}" onclick="memberFilter='${t}';renderMain();">${t==='Main'?'Main members':t==='Temporary'?'Temporary members':'All'} (${counts[t]})</button>`).join('')}
+  </div>`;
+}
+function openMemberForm(){
+  openModal('Add member', `
+    <div class="field"><label>Member name</label><input id="f_name" placeholder="e.g. Ramesh Shah"></div>
+    <div class="field"><label>Member type</label>
+      <select id="f_type"><option value="Main">Main member</option><option value="Temporary">Temporary member</option></select>
+    </div>
+    <div class="field"><label>Phone (optional)</label><input id="f_phone"></div>
+    <div class="field"><label>Member since (optional)</label><input id="f_join" type="number" placeholder="${currentYear()}"></div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveMember()">Save member</button>`);
+}
+async function saveMember(){
+  const name=document.getElementById('f_name').value.trim();
+  if(!name){ alert('Please enter the member name.'); return; }
+  DB.members.push({ id:uid(), name, memberType:document.getElementById('f_type').value, phone:document.getElementById('f_phone').value.trim(), joinYear:document.getElementById('f_join').value || currentYear() });
+  await save('members'); closeModal(); renderMain();
+}
+function quickAddPayment(memberId, period){
+  openPaymentForm(memberId, period);
+}
+
+/* ============================= PAYMENTS ============================= */
+function renderPayments(){
+  const y = selectedYear;
+  const yLabel = y==='all' ? 'all years' : y;
+  const list = DB.payments.filter(p=>matchesYear(p.year)).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return `
+    <div class="page-head">
+      <div><h1>Payment log</h1><p class="page-sub">Every payment received in ${yLabel}, with a printable, downloadable receipt for each.</p></div>
+      <div class="head-actions"><button class="btn" onclick="openPaymentForm()">Record payment</button></div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Receipt #</th><th>Member</th><th>Period</th><th>Mode</th><th>Date</th><th class="num">Amount</th><th></th></tr></thead>
+        <tbody>
+          ${list.length===0? `<tr class="empty-row"><td colspan="7">No payments recorded for ${yLabel} yet.</td></tr>` :
+          list.map(p=>`
+            <tr>
+              <td>${String(p.receiptNo).padStart(4,'0')}</td>
+              <td>${escapeHtml(memberName(p.memberId))}</td>
+              <td>${p.period}</td>
+              <td>${p.mode||'—'}</td>
+              <td>${fmtDate(p.date)}</td>
+              <td class="num">${fmt(p.amount)}</td>
+              <td class="center" style="white-space:nowrap;">
+                <button class="icon-btn" onclick="showReceipt('${p.id}')" title="View / print receipt">${iconPrint()}</button>
+                <button class="icon-btn" onclick="deleteItem('payments','${p.id}')" title="Delete">${iconTrash()}</button>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function openPaymentForm(prefillMember, prefillPeriod){
+  const y = selectedYear==='all' ? currentYear() : selectedYear;
+  openModal('Record a payment', `
+    <div class="field"><label>Member</label>
+      <select id="f_member">${DB.members.length? memberOptions(prefillMember) : '<option value="">Add a member first</option>'}</select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Year</label><input id="f_year" type="number" value="${y}"></div>
+      <div class="field"><label>Period</label>
+        <select id="f_period">
+          <option value="Yearly" ${prefillPeriod==='Yearly'?'selected':''}>Yearly fee</option>
+          ${MONTHS.map(mo=>`<option value="${mo}" ${prefillPeriod===mo?'selected':''}>${mo} (monthly)</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Amount (₹)</label><input id="f_amount" type="number" min="0"></div>
+      <div class="field"><label>Date</label><input id="f_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+    </div>
+    <div class="field"><label>Payment mode</label>
+      <select id="f_mode"><option>Cash</option><option>UPI</option><option>Bank transfer</option><option>Cheque</option></select>
+    </div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="savePayment()">Save & generate receipt</button>`);
+}
+async function savePayment(){
+  const memberId=document.getElementById('f_member').value;
+  const amount=document.getElementById('f_amount').value;
+  if(!memberId){ alert('Please add and select a member first.'); return; }
+  if(!amount){ alert('Please enter the amount.'); return; }
+  const receiptNo = DB.meta.nextReceiptNo || 1;
+  const payment = {
+    id:uid(), memberId, year:Number(document.getElementById('f_year').value),
+    period:document.getElementById('f_period').value, amount:Number(amount),
+    date:document.getElementById('f_date').value, mode:document.getElementById('f_mode').value,
+    receiptNo
+  };
+  DB.payments.push(payment);
+  DB.meta.nextReceiptNo = receiptNo+1;
+  await save('payments'); await save('meta');
+  closeModal();
+  showReceipt(payment.id);
+  renderMain();
+}
+
+function showReceipt(paymentId){
+  const p = DB.payments.find(x=>x.id===paymentId);
+  if(!p) return;
+  const m = DB.members.find(x=>x.id===p.memberId);
+  const html = `
+    <div id="print-area">
+      <div class="receipt">
+        <div class="receipt-no">Receipt No. ${String(p.receiptNo).padStart(4,'0')}</div>
+        <div class="receipt-head">
+          <div class="display">${escapeHtml(DB.meta.mandalName)}</div>
+          <div class="sub">${escapeHtml(DB.meta.tagline||'')}</div>
+        </div>
+        <div class="receipt-row"><span>Received from</span><span>${escapeHtml(m?m.name:'—')}</span></div>
+        <div class="receipt-row"><span>Period</span><span>${p.period} ${p.period!=='Yearly'?p.year:''}</span></div>
+        <div class="receipt-row"><span>Payment mode</span><span>${p.mode||'—'}</span></div>
+        <div class="receipt-row"><span>Date</span><span>${fmtDate(p.date)}</span></div>
+        <div class="receipt-amount">
+          <div class="big">${fmt(p.amount)}</div>
+          <div class="receipt-words">Rupees ${numToWords(p.amount)} only</div>
+        </div>
+        <div class="receipt-sign">
+          <div>Received by</div>
+          <div>Mandal seal / signature</div>
+        </div>
+      </div>
+    </div>
+  `;
+  openModal('Receipt', html, `<button class="btn secondary" onclick="closeModal()">Close</button><button class="btn secondary" onclick="window.print()">Print</button><button class="btn" onclick="downloadReceipt('${p.id}')">Download PDF</button>`);
+}
+
+async function downloadReceipt(paymentId){
+  const p = DB.payments.find(x=>x.id===paymentId);
+  const m = DB.members.find(x=>x.id===p?.memberId);
+  const target = document.querySelector('#print-area .receipt');
+  if(!p || !target || typeof html2canvas==='undefined' || typeof window.jspdf==='undefined'){
+    alert('Download isn\'t available right now — please use Print instead and choose "Save as PDF" in the print dialog.');
+    return;
+  }
+  try{
+    const canvas = await html2canvas(target, { scale:2, backgroundColor:'#fffdf7' });
+    const imgData = canvas.toDataURL('image/png');
+    const w = canvas.width/2, h = canvas.height/2;
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit:'pt', format:[w+60, h+60] });
+    pdf.addImage(imgData, 'PNG', 30, 30, w, h);
+    const safeName = (m?m.name:'member').replace(/[^a-z0-9]+/gi,'_');
+    pdf.save(`Receipt_${safeName}_${String(p.receiptNo).padStart(4,'0')}.pdf`);
+  }catch(e){
+    console.error(e);
+    alert('Download failed — please use Print instead and choose "Save as PDF" in the print dialog.');
+  }
+}
+
+/* ============================= EXPENSES ============================= */
+function renderExpenses(){
+  const y = selectedYear;
+  const yLabel = y==='all' ? 'all years' : y;
+  const list = DB.expenses.filter(e=>matchesYear(e.year)).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const total = list.reduce((a,e)=>a+Number(e.amount||0),0);
+  return `
+    <div class="page-head">
+      <div><h1>Expenses</h1><p class="page-sub">Everything spent for the ${yLabel} celebration.</p></div>
+      <div class="head-actions"><button class="btn" onclick="openExpenseForm()">Add expense</button></div>
+    </div>
+    <div class="stat-grid"><div class="stat"><div class="label">Total spent — ${yLabel}</div><div class="value red">${fmt(total)}</div><div class="sub">${list.length} entries</div></div></div>
+    <div class="panel">
+      <table>
+        <thead><tr>${y==='all'?'<th>Year</th>':''}<th>Date</th><th>Category</th><th>Description</th><th class="num">Amount</th><th></th></tr></thead>
+        <tbody>
+          ${list.length===0? `<tr class="empty-row"><td colspan="6">No expenses recorded for ${yLabel} yet.</td></tr>` :
+          list.map(e=>`
+            <tr>
+              ${y==='all'?`<td>${e.year}</td>`:''}
+              <td>${fmtDate(e.date)}</td>
+              <td>${escapeHtml(e.category==='Other' && e.otherReason ? 'Other — '+e.otherReason : e.category)}</td>
+              <td>${escapeHtml(e.description||'—')}</td>
+              <td class="num">${fmt(e.amount)}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('expenses','${e.id}')">${iconTrash()}</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+const EXPENSE_CATEGORIES = ['Mandap & decoration','Idol (murti)','Priest & puja samagri','Electricity & lighting','Sound & DJ','Prasad & catering','Immersion (visarjan)','Printing & invitations','Security','Other'];
+function openExpenseForm(){
+  openModal('Add expense', `
+    <div class="field"><label>Category</label><select id="f_cat" onchange="document.getElementById('other_wrap').style.display=this.value==='Other'?'block':'none';">${EXPENSE_CATEGORIES.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="field" id="other_wrap" style="display:none;"><label>Reason (since category is Other)</label><input id="f_other" placeholder="e.g. Ambulance on standby"></div>
+    <div class="field"><label>Description (optional)</label><input id="f_desc" placeholder="e.g. Marigold flowers"></div>
+    <div class="field-row">
+      <div class="field"><label>Amount (₹)</label><input id="f_amount" type="number" min="0"></div>
+      <div class="field"><label>Date</label><input id="f_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+    </div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveExpense()">Save expense</button>`);
+}
+async function saveExpense(){
+  const amount=document.getElementById('f_amount').value;
+  if(!amount){ alert('Please enter the amount.'); return; }
+  const date = document.getElementById('f_date').value;
+  const cat = document.getElementById('f_cat').value;
+  DB.expenses.push({
+    id:uid(), category:cat,
+    otherReason: cat==='Other' ? document.getElementById('f_other').value.trim() : '',
+    description:document.getElementById('f_desc').value.trim(), amount:Number(amount), date,
+    year:(date? new Date(date).getFullYear() : (selectedYear==='all'?currentYear():selectedYear))
+  });
+  await save('expenses'); closeModal(); renderMain();
+}
+
+/* ============================= BUDGET ============================= */
+function renderBudget(){
+  const y = selectedYear;
+  const yLabel = y==='all' ? 'all years' : y;
+  const budgetLines = DB.budget.filter(b=>matchesYear(b.year));
+  const expenseByCat = {};
+  DB.expenses.filter(e=>matchesYear(e.year)).forEach(e=>{ expenseByCat[e.category]=(expenseByCat[e.category]||0)+Number(e.amount||0); });
+  const plannedTotal = budgetLines.reduce((a,b)=>a+Number(b.plannedAmount||0),0);
+  const actualTotal = Object.values(expenseByCat).reduce((a,v)=>a+v,0);
+  return `
+    <div class="page-head">
+      <div><h1>Budget</h1><p class="page-sub">Planned vs. actual spend for ${yLabel}, by category.</p></div>
+      <div class="head-actions"><button class="btn" onclick="openBudgetForm()">Add budget line</button></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="label">Planned budget</div><div class="value">${fmt(plannedTotal)}</div></div>
+      <div class="stat"><div class="label">Actual spend</div><div class="value red">${fmt(actualTotal)}</div></div>
+      <div class="stat"><div class="label">Remaining</div><div class="value" style="color:${plannedTotal-actualTotal>=0?'var(--deep-green)':'var(--vermillion)'}">${fmt(plannedTotal-actualTotal)}</div></div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr>${y==='all'?'<th>Year</th>':''}<th>Category</th><th class="num">Planned</th><th class="num">Actual</th><th class="num">Variance</th><th></th></tr></thead>
+        <tbody>
+          ${budgetLines.length===0? `<tr class="empty-row"><td colspan="6">No budget lines set for ${yLabel} yet.</td></tr>` :
+          budgetLines.map(b=>{
+            const actual = expenseByCat[b.category]||0;
+            const variance = Number(b.plannedAmount) - actual;
+            const label = b.category==='Other' && b.otherReason ? 'Other — '+b.otherReason : b.category;
+            return `<tr>
+              ${y==='all'?`<td>${b.year}</td>`:''}
+              <td>${escapeHtml(label)}</td>
+              <td class="num">${fmt(b.plannedAmount)}</td>
+              <td class="num">${fmt(actual)}</td>
+              <td class="num" style="color:${variance>=0?'var(--paid)':'var(--vermillion)'}">${fmt(variance)}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('budget','${b.id}')">${iconTrash()}</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function openBudgetForm(){
+  const y = selectedYear==='all' ? currentYear() : selectedYear;
+  openModal('Add budget line', `
+    <div class="field"><label>Year</label><input id="f_year" type="number" value="${y}"></div>
+    <div class="field"><label>Category</label><select id="f_cat" onchange="document.getElementById('other_wrap').style.display=this.value==='Other'?'block':'none';">${EXPENSE_CATEGORIES.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="field" id="other_wrap" style="display:none;"><label>Reason (since category is Other)</label><input id="f_other" placeholder="e.g. Cultural competition prizes"></div>
+    <div class="field"><label>Planned amount (₹)</label><input id="f_amount" type="number" min="0"></div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveBudget()">Save</button>`);
+}
+async function saveBudget(){
+  const amount=document.getElementById('f_amount').value;
+  if(!amount){ alert('Please enter the planned amount.'); return; }
+  const cat = document.getElementById('f_cat').value;
+  DB.budget.push({ id:uid(), year:Number(document.getElementById('f_year').value), category:cat, otherReason: cat==='Other'? document.getElementById('f_other').value.trim() : '', plannedAmount:Number(amount) });
+  await save('budget'); closeModal(); renderMain();
+}
+
+/* ============================= TASKS ============================= */
+function renderTasks(){
+  const y = selectedYear;
+  const list = DB.tasks.filter(t=>matchesYear(t.year));
+  const currentYearPanel = y==='all' ? '' : `
+    <div class="panel">
+      <table>
+        <thead><tr><th>Task</th><th>Assigned to</th><th>Status</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+          ${list.length===0? `<tr class="empty-row"><td colspan="5">No tasks assigned for ${y} yet.</td></tr>` :
+          list.map(t=>`
+            <tr>
+              <td>${escapeHtml(t.taskName)}</td>
+              <td>${escapeHtml(memberName(t.memberId))}</td>
+              <td>
+                <select onchange="updateTaskStatus('${t.id}', this.value)" style="border:1px solid var(--line);border-radius:20px;padding:4px 8px;font-size:12px;background:var(--panel-2);">
+                  <option ${t.status==='Pending'?'selected':''}>Pending</option>
+                  <option ${t.status==='In progress'?'selected':''}>In progress</option>
+                  <option ${t.status==='Done'?'selected':''}>Done</option>
+                </select>
+              </td>
+              <td>${escapeHtml(t.notes||'—')}</td>
+              <td class="center"><button class="icon-btn" onclick="deleteItem('tasks','${t.id}')">${iconTrash()}</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  return `
+    <div class="page-head">
+      <div><h1>Tasks</h1><p class="page-sub">Who took up which responsibility, this year and in years past.</p></div>
+      <div class="head-actions"><button class="btn" onclick="openTaskForm()">Assign task</button></div>
+    </div>
+    ${currentYearPanel}
+    <div class="panel">
+      <div class="panel-head"><h2>Task history — every year</h2></div>
+      ${DB.tasks.length===0? `<div class="empty-state">No task history yet.</div>` : `
+      <table>
+        <thead><tr><th>Year</th><th>Task</th><th>Member</th><th>Status</th></tr></thead>
+        <tbody>
+          ${DB.tasks.slice().sort((a,b)=>b.year-a.year).map(t=>`
+            <tr><td>${t.year}</td><td>${escapeHtml(t.taskName)}</td><td>${escapeHtml(memberName(t.memberId))}</td><td><span class="tag ${t.status==='Done'?'done':t.status==='In progress'?'inprogress':'pending'}">${t.status}</span></td></tr>
+          `).join('')}
+        </tbody>
+      </table>`}
+    </div>
+  `;
+}
+function openTaskForm(){
+  const y = selectedYear==='all' ? currentYear() : selectedYear;
+  openModal('Assign a task', `
+    <div class="field"><label>Task</label><input id="f_task" placeholder="e.g. Mandap decoration lead"></div>
+    <div class="field"><label>Assigned to</label>
+      <select id="f_member">${DB.members.length? memberOptions() : '<option value="">Add a member first</option>'}</select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Year</label><input id="f_year" type="number" value="${y}"></div>
+      <div class="field"><label>Status</label><select id="f_status"><option>Pending</option><option>In progress</option><option>Done</option></select></div>
+    </div>
+    <div class="field"><label>Note (optional)</label><input id="f_notes"></div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveTask()">Save task</button>`);
+}
+async function saveTask(){
+  const taskName=document.getElementById('f_task').value.trim();
+  const memberId=document.getElementById('f_member').value;
+  if(!taskName || !memberId){ alert('Please enter a task name and choose a member.'); return; }
+  DB.tasks.push({ id:uid(), taskName, memberId, year:Number(document.getElementById('f_year').value), status:document.getElementById('f_status').value, notes:document.getElementById('f_notes').value.trim() });
+  await save('tasks'); closeModal(); renderMain();
+}
+async function updateTaskStatus(id, status){
+  const t = DB.tasks.find(x=>x.id===id); if(!t) return;
+  t.status = status; await save('tasks'); renderMain();
+}
+
+/* ============================= SHARED: delete ============================= */
+async function deleteItem(key, id){
+  if(!confirm('Remove this entry? This cannot be undone.')) return;
+  DB[key] = DB[key].filter(x=>x.id!==id);
+  await save(key);
+  renderMain();
+}
+
+/* ============================= SETTINGS (mandal name) ============================= */
+function editSetting(field){
+  const current = DB.meta[field] || '';
+  openModal(field==='mandalName' ? 'Mandal name' : 'Tagline', `
+    <div class="field"><label>${field==='mandalName'?'Mandal name':'Tagline (e.g. established year, city)'}</label><input id="f_val" value="${escapeHtml(current)}"></div>
+  `, `<button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveSetting('${field}')">Save</button>`);
+}
+async function saveSetting(field){
+  DB.meta[field] = document.getElementById('f_val').value.trim();
+  await save('meta'); closeModal(); applyBranding(); renderMain();
+}
+function applyBranding(){
+  document.getElementById('mandalNameEl').textContent = DB.meta.mandalName;
+  document.getElementById('mandalNameElM').textContent = DB.meta.mandalName;
+  document.getElementById('mandalTaglineEl').textContent = DB.meta.tagline;
+  document.title = DB.meta.mandalName + ' — Mandal Khata';
+}
+
+/* ============================= ROUTER ============================= */
+function renderYearBar(){
+  const bar = document.getElementById('globalYearBar');
+  if(!bar) return;
+  bar.innerHTML = `<span class="gyb-label">Festival year</span>${yearSelectHTML()}<span class="hint" style="margin:0;">Change it once here — every tab follows this year.</span>`;
+}
+function renderMain(){
+  renderYearBar();
+  const el = document.getElementById('mainContent');
+  let html = '';
+  if(activeTab==='dashboard') html = renderDashboard();
+  else if(activeTab==='sponsors') html = renderSponsors();
+  else if(activeTab==='members') html = renderMembers();
+  else if(activeTab==='payments') html = renderPayments();
+  else if(activeTab==='expenses') html = renderExpenses();
+  else if(activeTab==='budget') html = renderBudget();
+  else if(activeTab==='tasks') html = renderTasks();
+  el.innerHTML = `<div class="shared-note">This data is shared — everyone who opens this page sees and can edit the same mandal records.</div>` + html;
+}
+
+/* ============================= INIT ============================= */
+async function init(){
+  await loadAll();
+  renderNav();
+  applyBranding();
+  document.getElementById('mandalNameEl').onclick = ()=>editSetting('mandalName');
+  document.getElementById('mandalNameElM').onclick = ()=>editSetting('mandalName');
+  document.getElementById('mandalTaglineEl').onclick = ()=>editSetting('tagline');
+  renderMain();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+}
+init();
+</script>
+</body>
+</html>
